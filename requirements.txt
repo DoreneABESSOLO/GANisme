@@ -1,0 +1,15 @@
+# Installation standard :
+#   pip install -r requirements.txt
+#
+# Pour une build CPU-only de PyTorch (plus légère, suffisante pour ce projet) :
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+Pillow>=10.0
+requests>=2.31
+torch>=2.0
+torchvision>=0.15
+jupyter>=1.0
+ipykernel>=6.25

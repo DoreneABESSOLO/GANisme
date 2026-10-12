@@ -258,19 +258,3 @@ est visualisé dans `train_gan.ipynb` et repris dans
   loss dérivent, basculer vers une **hinge loss** ou une **LSGAN** est un
   changement localisé (une cellule de `train_gan.ipynb`), pas une
   réécriture.
-
-## Considérations légales et éthiques
-
-La Web Gallery of Art précise (`wga.hu/legal.html`) que les images
-téléchargées depuis le site sont destinées à un usage **éducatif et
-personnel** ; toute redistribution est interdite sans autorisation. En
-conséquence :
-
-- `scrape_images.py` limite volontairement le débit et la concurrence des
-  requêtes (site non commercial, maintenu par deux personnes) ;
-- les images téléchargées (`images/`) et les poids entraînés
-  (`checkpoints/`) sont destinés à un usage local d'expérimentation — à ne
-  **pas** republier ou redistribuer en l'état ;
-- la plupart des œuvres reproduites sont dans le domaine public (œuvres
-  antérieures à 1900), mais les *reproductions photographiques* elles-mêmes
-  restent soumises aux conditions d'usage du site qui les héberge.

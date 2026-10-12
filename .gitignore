@@ -1,0 +1,18 @@
+# Données sources et dérivées (volumineuses et/ou soumises aux conditions
+# d'usage de la Web Gallery of Art — redistribution interdite, cf. README)
+data/
+images/
+
+# Poids entraînés (binaires volumineux, régénérables via train_gan.ipynb)
+checkpoints/
+
+# Ébauche antérieure non liée au pipeline documenté
+EDA.ipynb
+
+# Captures d'écran ponctuelles non organisées
+Capture d'écran*.png
+
+# Divers
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

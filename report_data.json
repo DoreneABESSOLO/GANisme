@@ -1,0 +1,457 @@
+{
+  "n_total_works": 52867,
+  "n_paintings": 32438,
+  "pct_paintings": 61.4,
+  "n_authors": 3663,
+  "n_schools": 26,
+  "n_locations": 2284,
+  "n_private_collection": 5437,
+  "n_with_dims": 21466,
+  "pct_with_dims": 66.2,
+  "form_counts": {
+    "painting": 32438,
+    "sculpture": 7696,
+    "architecture": 4994,
+    "graphics": 4289,
+    "illumination": 1636,
+    "metalwork": 494,
+    "mosaic": 420,
+    "furniture": 271,
+    "tapestry": 198,
+    "ceramics": 181,
+    "stained-glass": 162,
+    "glassware": 77,
+    "others": 11
+  },
+  "type_counts": {
+    "religious": 13517,
+    "portrait": 4810,
+    "landscape": 4103,
+    "mythological": 3202,
+    "genre": 2772,
+    "still-life": 1405,
+    "other": 970,
+    "historical": 943,
+    "interior": 636,
+    "study": 80
+  },
+  "school_counts": {
+    "Italian": 13743,
+    "French": 4410,
+    "Dutch": 4375,
+    "Flemish": 3697,
+    "German": 1923,
+    "Spanish": 1250,
+    "English": 681,
+    "Netherlandish": 514,
+    "Austrian": 391,
+    "Hungarian": 345,
+    "American": 178,
+    "Swiss": 134,
+    "Other (14 écoles)": 797
+  },
+  "timeframe": [
+    [
+      "0201-0250",
+      36
+    ],
+    [
+      "0251-0300",
+      9
+    ],
+    [
+      "0301-0350",
+      2
+    ],
+    [
+      "0351-0400",
+      14
+    ],
+    [
+      "0401-0450",
+      3
+    ],
+    [
+      "0501-0550",
+      4
+    ],
+    [
+      "0701-0750",
+      2
+    ],
+    [
+      "0751-0800",
+      5
+    ],
+    [
+      "0801-0850",
+      5
+    ],
+    [
+      "0851-0900",
+      3
+    ],
+    [
+      "0951-1000",
+      5
+    ],
+    [
+      "1001-1050",
+      1
+    ],
+    [
+      "1051-1100",
+      40
+    ],
+    [
+      "1101-1150",
+      24
+    ],
+    [
+      "1151-1200",
+      30
+    ],
+    [
+      "1201-1250",
+      42
+    ],
+    [
+      "1251-1300",
+      225
+    ],
+    [
+      "1301-1350",
+      1355
+    ],
+    [
+      "1351-1400",
+      713
+    ],
+    [
+      "1401-1450",
+      1652
+    ],
+    [
+      "1451-1500",
+      3769
+    ],
+    [
+      "1501-1550",
+      4357
+    ],
+    [
+      "1551-1600",
+      2580
+    ],
+    [
+      "1601-1650",
+      5460
+    ],
+    [
+      "1651-1700",
+      3386
+    ],
+    [
+      "1701-1750",
+      2222
+    ],
+    [
+      "1751-1800",
+      1673
+    ],
+    [
+      "1801-1850",
+      1600
+    ],
+    [
+      "1851-1900",
+      3221
+    ]
+  ],
+  "top_authors": [
+    [
+      "GIOTTO di Bondone",
+      567
+    ],
+    [
+      "GOGH, Vincent van",
+      332
+    ],
+    [
+      "REMBRANDT Harmenszoon van Rijn",
+      317
+    ],
+    [
+      "RUBENS, Peter Paul",
+      308
+    ],
+    [
+      "RAFFAELLO Sanzio",
+      295
+    ],
+    [
+      "CRANACH, Lucas the Elder",
+      291
+    ],
+    [
+      "TINTORETTO",
+      287
+    ],
+    [
+      "MICHELANGELO Buonarroti",
+      278
+    ],
+    [
+      "TIZIANO Vecellio",
+      269
+    ],
+    [
+      "VERONESE, Paolo",
+      266
+    ],
+    [
+      "TIEPOLO, Giovanni Battista",
+      249
+    ],
+    [
+      "GRECO, El",
+      245
+    ]
+  ],
+  "artist_dist": {
+    "1": 962,
+    "2": 645,
+    "3-4": 723,
+    "5-9": 667,
+    "10-19": 363,
+    "20-49": 203,
+    "50+": 100
+  },
+  "medium_counts": {
+    "Oil on canvas": 14743,
+    "Fresco": 4488,
+    "Oil on panel": 3337,
+    "Oil on wood": 1942,
+    "Tempera on wood": 1173,
+    "Tempera on panel": 808,
+    "Oil on oak panel": 773,
+    "Panel": 553,
+    "Oil on copper": 476,
+    "Wood": 327,
+    "Autres": 3818
+  },
+  "ar_hist": [
+    [
+      "0.10",
+      183
+    ],
+    [
+      "0.32",
+      638
+    ],
+    [
+      "0.55",
+      4881
+    ],
+    [
+      "0.77",
+      3480
+    ],
+    [
+      "0.99",
+      2690
+    ],
+    [
+      "1.21",
+      6128
+    ],
+    [
+      "1.43",
+      1679
+    ],
+    [
+      "1.65",
+      598
+    ],
+    [
+      "1.88",
+      341
+    ],
+    [
+      "2.10",
+      186
+    ],
+    [
+      "2.32",
+      130
+    ],
+    [
+      "2.54",
+      93
+    ],
+    [
+      "2.76",
+      61
+    ],
+    [
+      "2.99",
+      56
+    ],
+    [
+      "3.21",
+      27
+    ],
+    [
+      "3.43",
+      12
+    ],
+    [
+      "3.65",
+      2
+    ],
+    [
+      "3.87",
+      3
+    ],
+    [
+      "4.09",
+      2
+    ],
+    [
+      "4.32",
+      7
+    ]
+  ],
+  "size_hist": [
+    [
+      "2",
+      1949
+    ],
+    [
+      "32",
+      5855
+    ],
+    [
+      "62",
+      4741
+    ],
+    [
+      "91",
+      2960
+    ],
+    [
+      "121",
+      1819
+    ],
+    [
+      "151",
+      1285
+    ],
+    [
+      "181",
+      979
+    ],
+    [
+      "211",
+      575
+    ],
+    [
+      "240",
+      341
+    ],
+    [
+      "270",
+      185
+    ],
+    [
+      "300",
+      186
+    ],
+    [
+      "330",
+      113
+    ],
+    [
+      "360",
+      70
+    ],
+    [
+      "389",
+      40
+    ],
+    [
+      "419",
+      47
+    ],
+    [
+      "449",
+      52
+    ],
+    [
+      "479",
+      29
+    ],
+    [
+      "509",
+      30
+    ],
+    [
+      "538",
+      30
+    ],
+    [
+      "568",
+      37
+    ]
+  ],
+  "date_quality": {
+    "Année exacte": 10432,
+    "Plage d'années": 9106,
+    "Date approximative": 6732,
+    "Décennie": 1572,
+    "Inconnue": 3887,
+    "Autre format": 709
+  },
+  "top_locations": [
+    [
+      "Private collection",
+      5437
+    ],
+    [
+      "Musée du Louvre, Paris",
+      1358
+    ],
+    [
+      "The Hermitage, St. Petersburg",
+      1195
+    ],
+    [
+      "Metropolitan Museum of Art, New York",
+      817
+    ],
+    [
+      "Museo del Prado, Madrid",
+      792
+    ],
+    [
+      "National Gallery, London",
+      767
+    ],
+    [
+      "Galleria degli Uffizi, Florence",
+      744
+    ],
+    [
+      "Staatliche Museen, Berlin",
+      643
+    ],
+    [
+      "Szépmûvészeti Múzeum, Budapest",
+      548
+    ],
+    [
+      "Kunsthistorisches Museum, Vienna",
+      478
+    ]
+  ]
+}

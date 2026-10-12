@@ -1,7 +1,4 @@
 """
-Télécharge les images des peintures depuis les pages wga.hu référencées dans
-data/paintings_only.csv (colonne URL).
-
 Mapping observé sur le site : une page HTML
     https://www.wga.hu/html/{a}/{artiste}/{oeuvre}.html
 a toujours son image pleine résolution à

@@ -1,260 +1,269 @@
-# GAN — Génération de peintures à partir du catalogue Web Gallery of Art
+# GAN — Generating Paintings from the Web Gallery of Art Catalogue
 
-Projet de data science : construire, à partir du catalogue de la **Web Gallery of
-Art** (WGA — art européen du 3ᵉ au 19ᵉ siècle), un jeu de données d'images
-exploitable pour entraîner un **GAN (DCGAN)** capable de générer des peintures
-inédites.
+A data science project: build, starting from the **Web Gallery of Art** (WGA —
+European art from the 3rd to the 19th century) catalogue, an exploitable image
+dataset to train a **GAN (DCGAN)** capable of generating original paintings.
 
-Le projet suit un pipeline en trois temps, chacun documenté par un notebook
-Jupyter exécutable de bout en bout :
+The project follows a three-stage pipeline, each documented by an end-to-end
+executable Jupyter notebook:
 
 ```
-Catalogue WGA  →  EDA & sélection  →  Scraping des images  →  Prétraitement  →  Entraînement GAN
-(52 867 œuvres)   (32 438 peintures)   (3 131 images)          (crop/normalisation)   (DCGAN, BCE)
+WGA catalogue  →  EDA & selection  →  Image scraping  →  Preprocessing  →  GAN training
+(52,867 works)     (32,438 paintings)  (3,131 images)      (crop/normalization)  (DCGAN, BCE)
 ```
 
-Un support de présentation (`presentation/gan_peintures.pptx`) résume l'ensemble
-avec les visualisations produites par les notebooks.
+A presentation deck (`presentation/gan_peintures.pptx`) summarizes the whole
+project with the visualizations produced by the notebooks.
 
-## Sommaire
+## Table of contents
 
-- [Source des données](#source-des-données)
-- [Structure du projet](#structure-du-projet)
+- [Data source](#data-source)
+- [Project structure](#project-structure)
 - [Installation](#installation)
-- [Utilisation](#utilisation)
-  - [1. Analyse exploratoire (EDA)](#1-analyse-exploratoire-eda)
-  - [2. Récupération des images (scraping)](#2-récupération-des-images-scraping)
-  - [3. Prétraitement](#3-prétraitement)
-  - [4. Entraînement du GAN](#4-entraînement-du-gan)
-- [Résultats actuels](#résultats-actuels)
-- [Choix méthodologiques](#choix-méthodologiques)
-- [Limites connues & prochaines étapes](#limites-connues--prochaines-étapes)
-- [Considérations légales et éthiques](#considérations-légales-et-éthiques)
+- [Usage](#usage)
+  - [1. Exploratory data analysis (EDA)](#1-exploratory-data-analysis-eda)
+  - [2. Fetching the images (scraping)](#2-fetching-the-images-scraping)
+  - [3. Preprocessing](#3-preprocessing)
+  - [4. Training the GAN](#4-training-the-gan)
+- [Current results](#current-results)
+- [Methodological choices](#methodological-choices)
+- [Known limitations & next steps](#known-limitations--next-steps)
+- [Legal and ethical considerations](#legal-and-ethical-considerations)
 
-## Source des données
+## Data source
 
-Le catalogue provient de la [Web Gallery of Art](https://www.wga.hu), une base
-de données non commerciale maintenue par deux personnes, qui référence l'art
-européen du 3ᵉ au 19ᵉ siècle (peinture, sculpture, architecture, arts
-graphiques…). Il est fourni sous forme de fichier téléchargeable
-(`data/art_catalog.xlsx` / `catalog.csv`) et contient **52 867 œuvres**
-décrites par 11 champs texte : `AUTHOR`, `BORN-DIED`, `TITLE`, `DATE`,
-`TECHNIQUE`, `LOCATION`, `URL`, `FORM`, `TYPE`, `SCHOOL`, `TIMEFRAME`.
+The catalogue comes from the [Web Gallery of Art](https://www.wga.hu), a
+non-commercial database maintained by two people, covering European art from
+the 3rd to the 19th century (painting, sculpture, architecture, graphic
+arts…). It is provided as a downloadable file (`data/art_catalog.xlsx` /
+`catalog.csv`) and contains **52,867 works** described by 11 text fields:
+`AUTHOR`, `BORN-DIED`, `TITLE`, `DATE`, `TECHNIQUE`, `LOCATION`, `URL`,
+`FORM`, `TYPE`, `SCHOOL`, `TIMEFRAME`.
 
-Le catalogue ne contient **aucune image** : seules des URL vers des pages
-HTML de présentation sur wga.hu sont fournies — la récupération des images
-fait partie intégrante du projet (voir [étape 2](#2-récupération-des-images-scraping)).
+The catalogue contains **no images**: only URLs to HTML presentation pages on
+wga.hu are provided — fetching the images is an integral part of this project
+(see [step 2](#2-fetching-the-images-scraping)).
 
-## Structure du projet
+## Project structure
 
 ```
 GAN/
-├── README.md                      # ce fichier
+├── README.md                      # this file
 │
-├── eda_peintures.ipynb            # notebook d'analyse exploratoire (EDA)
-├── eda_peintures.py                # script équivalent, non interactif
-├── report_data.json                # agrégats produits par l'EDA
+├── eda_peintures.ipynb            # exploratory data analysis (EDA) notebook
+├── eda_peintures.py                # equivalent non-interactive script
+├── report_data.json                # aggregates produced by the EDA
 │
-├── scraping_images.ipynb           # scraping local (VS Code / Jupyter)
-├── scraping_images_colab.ipynb     # variante autonome pour Google Colab
-├── scrape_images.py                # moteur de téléchargement (module partagé)
-├── build_subset.py                 # échantillonnage stratifié (module partagé)
+├── scraping_images.ipynb           # local scraping (VS Code / Jupyter)
+├── scraping_images_colab.ipynb     # self-contained Google Colab variant
+├── scrape_images.py                # download engine (shared module)
+├── build_subset.py                 # stratified sampling (shared module)
 │
-├── preprocessing_images.ipynb      # pipeline de prétraitement + visualisations
+├── preprocessing_images.ipynb      # preprocessing pipeline + visualizations
 │
-├── gan_dataset.py                   # Dataset PyTorch partagé (filtrage, crop, normalisation)
-├── gan_models.py                    # architecture DCGAN (Générateur / Discriminateur)
-├── train_gan.ipynb                  # notebook d'entraînement du GAN
+├── gan_dataset.py                   # shared PyTorch Dataset (filtering, crop, normalization)
+├── gan_models.py                    # DCGAN architecture (Generator / Discriminator)
+├── train_gan.ipynb                  # GAN training notebook
 │
 ├── data/
-│   ├── art_catalog.xlsx             # catalogue source (téléchargé depuis wga.hu)
+│   ├── art_catalog.xlsx             # source catalogue (downloaded from wga.hu)
 │   ├── art_catalog.xlsx - catalog.csv
-│   ├── paintings_only.csv           # sous-ensemble FORM == "painting" (32 438 lignes)
-│   └── subset_sample.csv            # sous-échantillon stratifié (3 680 lignes visées)
+│   ├── paintings_only.csv           # FORM == "painting" subset (32,438 rows)
+│   └── subset_sample.csv            # stratified sample (3,680 rows targeted)
 │
-├── images/                          # images téléchargées (miroir de l'arborescence wga.hu)
-│   └── _failed.csv                  # journal des échecs de téléchargement
+├── images/                          # downloaded images (mirrors the wga.hu URL structure)
+│   └── _failed.csv                  # download-failure log
 │
-├── checkpoints/                     # poids sauvegardés du GAN (generator.pt, discriminator.pt)
+├── checkpoints/                     # saved GAN weights (generator.pt, discriminator.pt)
 │
 └── presentation/
-    └── gan_peintures.pptx           # support de présentation du projet
+    └── gan_peintures.pptx           # project presentation deck
 ```
 
-> `EDA.ipynb` (à la racine, en majuscules) est une ébauche antérieure non liée
-> à ce pipeline — à ignorer, conservée telle quelle sans modification.
+> `EDA.ipynb` (at the root, uppercase) is an earlier, unrelated draft — ignore
+> it, kept as-is without modification.
 
 ## Installation
 
-Python ≥ 3.10 recommandé. Dépendances principales :
+Python ≥ 3.10 recommended. Main dependencies:
 
 ```bash
 pip install pandas numpy matplotlib pillow requests
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu   # build CPU
-pip install nbformat nbclient ipykernel      # pour exécuter les notebooks en ligne de commande
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu   # CPU build
+pip install nbformat nbclient ipykernel      # to run the notebooks from the command line
 ```
 
-Aucune clé d'API n'est nécessaire. Les notebooks s'exécutent aussi bien en
-local (VS Code, Jupyter) que sur Google Colab (voir `scraping_images_colab.ipynb`
-et la section « Compatibilité Colab » de `train_gan.ipynb`).
+No API key is required. The notebooks run equally well locally (VS Code,
+Jupyter) or on Google Colab (see `scraping_images_colab.ipynb` and the
+"Colab compatibility" section of `train_gan.ipynb`).
 
-## Utilisation
+## Usage
 
-### 1. Analyse exploratoire (EDA)
+### 1. Exploratory data analysis (EDA)
 
 ```bash
 python eda_peintures.py
-# ou, en notebook : ouvrir et exécuter eda_peintures.ipynb
+# or, as a notebook: open and run eda_peintures.ipynb
 ```
 
-Produit `data/paintings_only.csv` (sous-ensemble peintures) et
-`report_data.json` (agrégats pour la présentation). Couvre : qualité des
-données, répartition par genre/école/période, artistes, techniques et
-dimensions, fiabilité du champ `DATE`, lieux de conservation.
+Produces `data/paintings_only.csv` (paintings subset) and `report_data.json`
+(aggregates for the presentation). Covers: data quality, breakdown by
+genre/school/period, artists, technique and dimensions, reliability of the
+`DATE` field, and conservation locations.
 
-**Constat principal :** le catalogue est propre au niveau structurel (aucun
-doublon, aucun champ vide) mais fortement déséquilibré — 42 % de peinture
-religieuse, 42 % d'école italienne, aucune œuvre après 1900.
+**Main finding:** the catalogue is clean at the structural level (no
+duplicates, no empty fields) but heavily imbalanced — 42% religious painting,
+42% Italian school, no works after 1900.
 
-### 2. Récupération des images (scraping)
+### 2. Fetching the images (scraping)
 
-Le mapping entre une page de présentation et son image pleine résolution est
-systématique :
+The mapping between a presentation page and its full-resolution image is
+systematic:
 
 ```
-https://www.wga.hu/html/{a}/{artiste}/{oeuvre}.html
-    → https://www.wga.hu/art/{a}/{artiste}/{oeuvre}.jpg
+https://www.wga.hu/html/{a}/{artist}/{work}.html
+    → https://www.wga.hu/art/{a}/{artist}/{work}.jpg
 ```
 
-Construire un sous-échantillon stratifié (quota égal par genre puis par
-école, pour corriger le déséquilibre de l'EDA) :
+Build a stratified sample (equal quota by genre, then by school, to correct
+the imbalance found in the EDA):
 
 ```bash
 python build_subset.py --size 4000
 ```
 
-Puis télécharger les images (débit volontairement limité — voir
-[considérations légales](#considérations-légales-et-éthiques)) :
+Then download the images (deliberately rate-limited — see
+[legal considerations](#legal-and-ethical-considerations)):
 
 ```bash
 python scrape_images.py --csv data/subset_sample.csv --out images --workers 4 --min-delay 0.4
 ```
 
-Options utiles : `--limit N` (test sur un échantillon), `--workers`,
-`--min-delay`, `--timeout`. Le script reprend automatiquement là où il s'est
-arrêté (les fichiers déjà présents sont ignorés) et journalise les échecs
-dans `images/_failed.csv`.
+Useful options: `--limit N` (test on a sample), `--workers`, `--min-delay`,
+`--timeout`. The script automatically resumes where it left off (files
+already present are skipped) and logs failures to `images/_failed.csv`.
 
-Pour exécuter le scraping depuis Google Colab plutôt qu'en local, utiliser
-`scraping_images_colab.ipynb` (autonome : il réécrit ses propres dépendances
-via `%%writefile`, monte Google Drive pour persister les images entre
-sessions).
+To run the scraping from Google Colab instead of locally, use
+`scraping_images_colab.ipynb` (self-contained: it rewrites its own
+dependencies via `%%writefile`, and mounts Google Drive to persist images
+across sessions).
 
-### 3. Prétraitement
+### 3. Preprocessing
 
-`preprocessing_images.ipynb` documente et visualise chaque étape sur les
-images réellement téléchargées :
+`preprocessing_images.ipynb` documents and visualizes each step on the
+actually downloaded images:
 
-1. Validation des fichiers (détection des téléchargements corrompus)
-2. Analyse des dimensions et ratios réels
-3. Filtrage des formats extrêmes (ratio largeur/hauteur hors de 0,4–2,5, ou
-   plus petit côté < 64 px)
-4. Comparaison center-crop vs letterbox (center-crop retenu)
-5. Normalisation (`RGB → crop/resize 64×64 ou 128×128 → tensor → [-1, 1]`)
-6. `Dataset` / `DataLoader` PyTorch robuste (ignore une image illisible plutôt
-   que de planter)
-7. Augmentation optionnelle (flip horizontal, avec réserve sur les
-   conventions picturales)
+1. File validation (detecting corrupted downloads)
+2. Analysis of real dimensions and aspect ratios
+3. Filtering out extreme formats (width/height ratio outside 0.4–2.5, or
+   shortest side < 64 px)
+4. Center-crop vs. letterbox comparison (center-crop retained)
+5. Normalization (`RGB → crop/resize 64×64 or 128×128 → tensor → [-1, 1]`)
+6. Robust PyTorch `Dataset` / `DataLoader` (skips an unreadable image rather
+   than crashing)
+7. Optional augmentation (horizontal flip, with a caveat about pictorial
+   conventions)
 
-La logique réutilisable (dataset, filtrage, center-crop) est factorisée dans
-`gan_dataset.py`, importé à la fois par ce notebook et par `train_gan.ipynb`.
+The reusable logic (dataset, filtering, center-crop) is factored out into
+`gan_dataset.py`, imported by both this notebook and `train_gan.ipynb`.
 
-### 4. Entraînement du GAN
+### 4. Training the GAN
 
 ```bash
-# ouvrir et exécuter train_gan.ipynb (local ou Colab)
+# open and run train_gan.ipynb (local or Colab)
 ```
 
-Points clés du notebook :
+Key points of the notebook:
 
-- **Données** : utilise en priorité `data/subset_sample.csv` (sous-échantillon
-  stratifié) plutôt qu'un mélange arbitraire de tout `images/`, via
+- **Data**: prioritizes `data/subset_sample.csv` (stratified sample) over an
+  arbitrary mix of everything in `images/`, via
   `gan_dataset.subset_image_paths()`.
-- **Reprise automatique** : si `checkpoints/generator.pt` existe déjà, les
-  poids et l'historique des loss sont rechargés, et l'entraînement reprend à
-  l'epoch suivante — utile pour un entraînement long en CPU, réparti sur
-  plusieurs sessions.
-- **Checkpoints périodiques** (`CKPT_EVERY`, 25 epochs par défaut) :
-  limite la perte de progression en cas d'interruption.
-- **Visualisation de la progression** : un instantané généré à partir d'un
-  bruit latent fixe est affiché régulièrement, pour suivre visuellement la
-  convergence du générateur.
+- **Automatic resume**: if `checkpoints/generator.pt` already exists, the
+  weights and loss history are reloaded, and training resumes at the next
+  epoch — useful for a long CPU training run split across several sessions.
+- **Periodic checkpoints** (`CKPT_EVERY`, 25 epochs by default): limits
+  progress loss in case of interruption.
+- **Progress visualization**: a sample generated from a fixed latent noise
+  vector is displayed regularly, to visually track the generator's
+  convergence.
 
-En CPU, un entraînement complet (plusieurs centaines d'epochs sur quelques
-milliers d'images) peut prendre plusieurs heures ; `train_gan.ipynb` contient
-une section « Compatibilité Colab » pour migrer l'exécution — pas le
-scraping — sur le GPU gratuit de Colab si besoin.
+On CPU, a full training run (several hundred epochs on a few thousand
+images) can take several hours; `train_gan.ipynb` includes a "Colab
+compatibility" section to migrate the execution — not the scraping — to
+Colab's free GPU if needed.
 
-## Résultats actuels
+## Current results
 
 | | |
 |---|---|
-| Œuvres dans le catalogue | 52 867 |
-| Peintures sélectionnées (`FORM == "painting"`) | 32 438 (61,4 %) |
-| Sous-échantillon stratifié visé | 3 680 images |
-| Images effectivement téléchargées | 2 973 réussies / 3 680 (81 %), 3 131 au total disponibles |
-| Checkpoints du GAN sauvegardés | `checkpoints/generator.pt`, `checkpoints/discriminator.pt` |
+| Works in the catalogue | 52,867 |
+| Selected paintings (`FORM == "painting"`) | 32,438 (61.4%) |
+| Targeted stratified sample | 3,680 images |
+| Images actually downloaded | 2,973 succeeded / 3,680 (81%), 3,131 available in total |
+| Saved GAN checkpoints | `checkpoints/generator.pt`, `checkpoints/discriminator.pt` |
 
-Un premier run de validation (DCGAN, 30 epochs, 154 images, CPU local) a
-confirmé que le pipeline entraîne correctement : la loss du discriminateur
-reste stable (jamais écrasée à zéro), celle du générateur oscille sans
-exploser, et les générations évoluent visiblement du bruit pur vers des
-textures et couleurs cohérentes — sans toutefois produire de formes
-reconnaissables, ce qui est attendu à cette échelle de données/epochs. Des
-runs complémentaires ont depuis été exécutés localement sur un jeu d'images
-plus large ; les résultats détaillés de ces runs ne sont pas encore
-consolidés dans ce dépôt.
+A first validation run (DCGAN, 30 epochs, 154 images, local CPU) confirmed
+that the pipeline trains correctly: the discriminator's loss stays stable
+(never collapses to zero), the generator's loss oscillates without
+exploding, and the generated samples visibly evolve from pure noise toward
+coherent textures and colors — without yet producing recognizable shapes,
+which is expected at this scale of data/epochs. Additional runs have since
+been performed locally on a larger image set; detailed results from those
+runs are not yet consolidated in this repository.
 
-Le détail (courbes de loss, grilles de progression, comparaison réel/généré)
-est visualisé dans `train_gan.ipynb` et repris dans
+The detail (loss curves, progression grids, real-vs-generated comparison) is
+visualized in `train_gan.ipynb` and reused in
 `presentation/gan_peintures.pptx`.
 
-## Choix méthodologiques
+## Methodological choices
 
-- **Architecture : DCGAN** plutôt que StyleGAN ou un modèle de diffusion —
-  seule architecture réaliste à entraîner en CPU-only sur un corpus de
-  quelques milliers d'images ; bien documentée, point de départ standard.
-- **Fonction de perte : BCE non-saturante** (le générateur maximise
-  `log D(G(z))` plutôt que de minimiser `log(1-D(G(z)))`, pour éviter des
-  gradients quasi nuls en début d'entraînement) + **label smoothing** (0,9
-  côté réel) pour limiter la surconfiance du discriminateur, facteur connu de
-  mode collapse. Hyperparamètres Adam (`lr=2e-4`, `β=(0.5, 0.999)`)
-  recommandés par le papier DCGAN original.
-- **Center-crop plutôt que letterbox** pour la mise en forme des images :
-  les formats extrêmes étant déjà filtrés en amont, le center-crop perd peu
-  de contenu réel et évite d'introduire des bordures artificielles que le
-  modèle pourrait apprendre à tort.
-- **Échantillonnage stratifié** (quota égal par genre puis par école) pour
-  atténuer le déséquilibre structurel du catalogue plutôt que de l'ignorer.
+- **Architecture: DCGAN** rather than StyleGAN or a diffusion model — the
+  only realistic architecture to train CPU-only on a corpus of a few
+  thousand images; well documented, a standard starting point.
+- **Loss function: non-saturating BCE** (the generator maximizes
+  `log D(G(z))` instead of minimizing `log(1-D(G(z)))`, to avoid near-zero
+  gradients early in training) + **label smoothing** (0.9 on the real side)
+  to limit discriminator overconfidence, a known mode-collapse factor. Adam
+  hyperparameters (`lr=2e-4`, `β=(0.5, 0.999)`) recommended by the original
+  DCGAN paper.
+- **Center-crop rather than letterbox** for image formatting: since extreme
+  formats are already filtered out upstream, center-crop loses little real
+  content and avoids introducing artificial borders the model could
+  wrongly learn.
+- **Stratified sampling** (equal quota by genre then by school) to mitigate
+  the catalogue's structural imbalance rather than ignoring it.
 
-## Limites connues & prochaines étapes
+## Known limitations & next steps
 
-- **Échelle actuelle limitée** : les résultats documentés viennent d'un run
-  de validation (154 images, 30 epochs) qui prouve la mécanique du pipeline
-  mais ne produit pas encore de peintures convaincantes. Un entraînement
-  complet nécessite plusieurs milliers d'images et plusieurs centaines
-  d'epochs.
-- **Déséquilibre du corpus** : même stratifié, l'échantillon reste dominé par
-  l'école italienne et le genre religieux. Un GAN conditionnel (sur `TYPE`
-  et/ou `SCHOOL`) est une piste pour mieux contrôler la diversité générée.
-- **~18 % d'échecs de téléchargement** (timeouts) sur le scraping complet du
-  sous-échantillon — dus à la capacité limitée du serveur WGA, pas à un
-  blocage ; relancer `scrape_images.py` avec le même `--csv` complète
-  automatiquement les manquants.
-- **Fiabilité du champ `DATE`** : texte libre très hétérogène (seulement 32 %
-  d'années exactes) — préférer systématiquement `TIMEFRAME` pour tout
-  filtrage ou conditionnement temporel.
-- **Mode collapse à surveiller** à plus grande échelle : si les courbes de
-  loss dérivent, basculer vers une **hinge loss** ou une **LSGAN** est un
-  changement localisé (une cellule de `train_gan.ipynb`), pas une
-  réécriture.
+- **Current scale is limited**: the documented results come from a
+  validation run (154 images, 30 epochs) that proves the pipeline's
+  mechanics but does not yet produce convincing paintings. A full training
+  run requires several thousand images and several hundred epochs.
+- **Corpus imbalance**: even stratified, the sample remains dominated by
+  the Italian school and the religious genre. A conditional GAN (on `TYPE`
+  and/or `SCHOOL`) is a path to better control the generated diversity.
+- **~18% download failures** (timeouts) on the full scraping of the
+  stratified sample — due to the WGA server's limited capacity, not a
+  block; re-running `scrape_images.py` with the same `--csv` automatically
+  completes the missing files.
+- **Reliability of the `DATE` field**: very heterogeneous free text (only
+  32% exact years) — systematically prefer `TIMEFRAME` for any temporal
+  filtering or conditioning.
+- **Mode collapse to monitor** at larger scale: if the loss curves drift,
+  switching to a **hinge loss** or an **LSGAN** is a localized change (one
+  cell in `train_gan.ipynb`), not a rewrite.
+
+## Legal and ethical considerations
+
+The Web Gallery of Art states (`wga.hu/legal.html`) that images downloaded
+from the site are intended for **educational and personal use** only; any
+redistribution is prohibited without authorization. As a result:
+
+- `scrape_images.py` deliberately limits the rate and concurrency of
+  requests (non-commercial site, maintained by two people);
+- the downloaded images (`images/`) and trained weights (`checkpoints/`)
+  are intended for local experimentation — do **not** republish or
+  redistribute them as-is;
+- most of the reproduced works are in the public domain (works predating
+  1900), but the *photographic reproductions* themselves remain subject to
+  the usage terms of the site that hosts them.

@@ -32,7 +32,7 @@ def is_valid_image(path: Path) -> bool:
 
 
 def filter_by_format(paths, min_ratio=0.4, max_ratio=2.5, min_side=64):
-    """Ne garde que les fichiers lisibles et dans la plage de format retenue par l'EDA."""
+    
     kept = []
     for p in paths:
         if not is_valid_image(p):
@@ -50,12 +50,7 @@ def list_valid_images(images_dir, min_ratio=0.4, max_ratio=2.5, min_side=64):
 
 
 def subset_image_paths(csv_path, images_dir, min_ratio=0.4, max_ratio=2.5, min_side=64):
-    """
-    Chemins locaux des images du sous-échantillon équilibré (data/subset_sample.csv),
-    limités à celles réellement déjà téléchargées sur disque. À préférer à
-    list_valid_images() pour l'entraînement : évite de mélanger le sous-échantillon
-    stratifié avec d'éventuels fichiers de test téléchargés en dehors de ce tirage.
-    """
+  
     images_dir = Path(images_dir)
     with open(csv_path, encoding="utf-8") as f:
         urls = [row["URL"] for row in csv.DictReader(f)]

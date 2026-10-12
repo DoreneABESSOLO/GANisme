@@ -1,20 +1,3 @@
-"""
-Construit un sous-échantillon équilibré de data/paintings_only.csv pour démarrer
-rapidement l'entraînement du GAN, sans attendre le scraping complet des 32 438
-images (voir eda_peintures.ipynb, section 12 : le corpus brut est dominé à 42%
-par le religieux et 42% par l'école italienne).
-
-Stratégie :
-  1. Quota égal par TYPE (ex. 4000 / 10 genres = 400 par genre) -> corrige le
-     déséquilibre de genre.
-  2. À l'intérieur de chaque genre, quota égal par SCHOOL présente -> corrige
-     en partie le déséquilibre d'école, dans la limite du disponible.
-  3. Les quotas non atteints (écoles trop petites) sont redistribués
-     aléatoirement sur le reste du genre pour atteindre la cible.
-
-Usage :
-    python build_subset.py --size 4000
-"""
 import argparse
 import pandas as pd
 
@@ -35,8 +18,7 @@ def stratified_sample(paint: pd.DataFrame, target_total: int) -> pd.DataFrame:
             lambda g: g.sample(min(len(g), per_school), random_state=SEED)
         )
 
-        # complète jusqu'au quota du genre avec le reste disponible (écoles
-        # trop petites pour fournir leur part)
+        
         missing = quota_per_type - len(chosen)
         if missing > 0:
             remaining = sub.drop(chosen.index)
